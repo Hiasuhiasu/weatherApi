@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    let result = async () => {
+        let dataJson = await fetch(
+            'https://api.openweathermap.org/data/2.5/onecall?lat=45.0428&lon=41.9733&exclude=minutely,hourly&appid=2dcb67ca76b274b917229429182cc984'
+        );
+        let data = await dataJson.json();
+        let arrayData = [...data.daily];
+
+        let dayOfMinDifTemp = 0;
+        let minDifferenceDayTemp = Infinity;
+        let dayOfMaxDaylight = 0;
+        let maxDaylight = -Infinity;
+
+        for(let i=0; i<5; i++) {
+            let element = arrayData[i];
+            let tempDifferrence = (element.temp.night - element.feels_like.night).toFixed(2);
+            let dayLength = (element.sunset - element.sunrise)/60;
+            let day = new Date(element.dt*1000).toLocaleDateString();
+
+            if(tempDifferrence < minDifferenceDayTemp) {
+                minDifferenceDayTemp = tempDifferrence;
+                dayOfMinDifTemp = day;
+            };
+            if(dayLength > maxDaylight) {
+                maxDaylight = dayLength;
+                dayOfMaxDaylight = day;
+            };
+        }
+
+        console.log(`Minimum temperature difference: ${minDifferenceDayTemp} °C, day: ${dayOfMinDifTemp}`);
+        console.log(`Maximum daylight: ${maxDaylight.toFixed(2)} min, day: ${dayOfMaxDaylight}`);
+    };
+    result();
+</script>
+</html>
