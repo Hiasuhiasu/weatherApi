@@ -6,7 +6,7 @@ class Pool {
     this.free = [];
     this.queue = [];
     this.current = 0;
-    this.size = 0;
+    this.size = 10;
     this.available = 0;
   }
 
